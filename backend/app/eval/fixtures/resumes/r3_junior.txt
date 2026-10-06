@@ -1,0 +1,5 @@
+Sam Okafor
+B.S. Computer Science, Metro College
+Software Engineering Intern, LocalBank (summer 2025)
+- Wrote Python scripts and SQL queries for internal reports.
+- Coursework: databases, operating systems.

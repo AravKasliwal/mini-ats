@@ -1,0 +1,4 @@
+Chris Doe
+B.S. Computer Science, Online University
+Skills: python fastapi django flask postgres sql docker rest
+Interested in backend engineering. Looking for first role.

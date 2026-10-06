@@ -1,0 +1,5 @@
+Alex Rivera
+B.S. Computer Science, State University
+Senior Backend Engineer, Acme Cloud (2019-2025)
+- Designed REST APIs in Python (FastAPI) on Postgres, serving 2M users in production.
+- Led a team of 4; owned the Docker/Kubernetes migration and cut p95 latency by 45%.

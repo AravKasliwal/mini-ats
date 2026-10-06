@@ -1,0 +1,5 @@
+Lee Alvarez
+M.S. Statistics, Northern University
+Data Scientist, RetailCo (2020-2025)
+- Trained forecasting models in Python and SQL; deployed batch scoring to production.
+- Built dashboards for the merchandising team.

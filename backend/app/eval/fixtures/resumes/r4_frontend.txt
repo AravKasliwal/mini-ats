@@ -1,0 +1,5 @@
+Dana Kim
+B.A. Graphic Design, Arts University
+Frontend Lead, PixelWorks (2018-2025)
+- Led a team of 6 building React and TypeScript apps; shipped redesigned dashboard used by 300k users.
+- Owned the CSS design system.

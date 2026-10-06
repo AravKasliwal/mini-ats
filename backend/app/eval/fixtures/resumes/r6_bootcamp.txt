@@ -1,0 +1,6 @@
+Jordan Blake
+Full-stack Bootcamp graduate (12 weeks)
+Projects:
+- Personal blog using Django and Postgres, containerized with Docker.
+- Todo app with a small API.
+Previously: retail manager (2016-2024)

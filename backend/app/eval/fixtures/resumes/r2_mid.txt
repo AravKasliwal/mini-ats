@@ -1,0 +1,5 @@
+Priya Nair
+B.S. Electrical Engineering, Tech Institute
+Software Engineer, ShopFast (2021-2025)
+- Built Flask services and SQL reporting pipelines; shipped checkout API to production for 100k users.
+- Wrote Docker images for the team's services.

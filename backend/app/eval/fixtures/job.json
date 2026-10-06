@@ -1,0 +1,16 @@
+{
+  "title": "Backend Engineer",
+  "description": "Build and run Python services for a recruiting platform.",
+  "pass_threshold": 60,
+  "rubric": [
+    {"name": "Backend skills", "category": "skills", "weight": 3,
+     "description": "Python, APIs, SQL databases, cloud/containers",
+     "keywords": ["python", "fastapi", "django", "flask", "postgres", "sql", "docker", "rest"]},
+    {"name": "Relevant experience", "category": "experience", "weight": 2,
+     "description": "Shipped production backend systems; ownership and impact",
+     "keywords": ["production", "shipped", "led", "owned", "scaled", "latency", "users"]},
+    {"name": "Education", "category": "education", "weight": 1,
+     "description": "Degree in CS or a related field",
+     "keywords": ["computer science", "b.s.", "m.s.", "bachelor", "master", "engineering"]}
+  ]
+}

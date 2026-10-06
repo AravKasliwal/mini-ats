@@ -1,0 +1,4 @@
+Morgan Tate
+Principal Engineer, StreamLine (2012-2025). No university degree; self-taught.
+- Architected Python REST APIs (FastAPI, Django) on Postgres; scaled the platform to 20M users in production.
+- Led 12 engineers; owned Docker-based deployment; reduced latency 3x.
