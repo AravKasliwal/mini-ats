@@ -16,6 +16,8 @@ All nine plan slices are implemented. Scheduling is a stub.
 | RBAC | recruiters see everything; interviewers see only assigned candidates/interviews and can only write scorecards for their own |
 | Eval harness | done (below) |
 
+Original scope and slice order: [docs/build_plan.md](docs/build_plan.md).
+
 ## Architecture
 ```
 React (Vite) ──/api──▶ FastAPI ──▶ SQLAlchemy ──▶ Postgres (SQLite for tests)
