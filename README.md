@@ -14,6 +14,7 @@ All nine plan slices are implemented. Scheduling is a stub.
 | Scaffold, jobs + rubric, upload/parse, score run, schedule stub | done |
 | Transcript → scorecard (rating, summary, verbatim quotes per criterion) | done |
 | RBAC | recruiters see everything; interviewers see only assigned candidates/interviews and can only write scorecards for their own |
+| Pipeline | candidate stage (new → screened → interviewing → offer / rejected), edit/delete, candidates ranked by score, ranked CSV export (formula-injection safe) |
 | Eval harness | done (below) |
 
 Original scope and slice order: [docs/build_plan.md](docs/build_plan.md).

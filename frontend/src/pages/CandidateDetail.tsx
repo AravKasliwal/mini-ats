@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { api, session } from "../api";
 
 export default function CandidateDetail() {
   const { id } = useParams();
+  const nav = useNavigate();
   const isRec = session.user?.role === "recruiter";
   const [c, setC] = useState<any>(null);
   const [ivs, setIvs] = useState<any[]>([]);
@@ -21,7 +22,11 @@ export default function CandidateDetail() {
     {err && <p className="err">{err}</p>}
     <div className="card"><div className="row"><h2 style={{ margin: 0, flex: 1 }}>{c.name}</h2>
       {isRec && <button onClick={() => act(api(`/candidates/${id}/score`, { method: "POST" }))}>{run ? "Re-score" : "Score vs rubric"}</button>}</div>
-      <small>{c.filename}</small></div>
+      <div className="row"><small>{c.filename}</small>
+        {isRec ? <><label><small>Stage </small><select value={c.stage} onChange={e => act(api(`/candidates/${id}`, { method: "PATCH", json: { stage: e.target.value } }))}>
+          {["new", "screened", "interviewing", "offer", "rejected"].map(st => <option key={st}>{st}</option>)}</select></label>
+          <button className="ghost" onClick={() => { if (confirm(`Delete ${c.name}?`)) api(`/candidates/${id}`, { method: "DELETE" }).then(() => nav("/")).catch((e: Error) => setErr(e.message)); }}>Delete</button></>
+          : <small>Stage: {c.stage}</small>}</div></div>
 
     {run && <div className="card">
       <h3>Score: {run.total}/100 <span className={run.passed ? "pass" : "fail"}>{run.passed ? "PASS" : "BELOW THRESHOLD"}</span>

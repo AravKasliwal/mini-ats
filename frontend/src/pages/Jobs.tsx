@@ -20,6 +20,13 @@ export default function Jobs() {
     const fd = new FormData(); fd.append("job_id", String(jobId)); fd.append("file", f);
     run(api("/candidates", { method: "POST", body: fd })); e.target.value = "";
   }
+  async function exportCsv(jobId: number) {
+    const res = await fetch(`/api/jobs/${jobId}/export.csv`, { headers: { Authorization: `Bearer ${session.token}` } });
+    if (!res.ok) return setErr("Export failed");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(await res.blob()); a.download = `job-${jobId}-candidates.csv`; a.click();
+    URL.revokeObjectURL(a.href);
+  }
   const setC = (i: number, patch: Partial<Rubric>) => setCrit(crit.map((c, j) => (j === i ? { ...c, ...patch } : c)));
 
   return (<>
@@ -28,11 +35,13 @@ export default function Jobs() {
       <div className="card" key={j.id}>
         <div className="row"><h3 style={{ margin: 0, flex: 1 }}>{j.title}</h3>
           {isRec && <><label>Upload resume (PDF/txt) <input type="file" accept=".pdf,.txt,.md" onChange={e => upload(j.id, e)} /></label>
+            <button className="ghost" onClick={() => exportCsv(j.id)}>Export CSV</button>
             <button className="ghost" onClick={() => run(api(`/jobs/${j.id}`, { method: "DELETE" }))}>Delete</button></>}</div>
         <small>{j.rubric.map((r: any) => `${r.name} (×${r.weight})`).join(" · ")} — pass ≥ {j.pass_threshold}</small>
-        <table><tbody>{cands.filter(c => c.job_id === j.id).map(c => (
-          <tr key={c.id}><td><Link to={`/candidates/${c.id}`}>{c.name}</Link></td>
-            <td>{c.latest_total == null ? "not scored" : `${c.latest_total}/100`}</td></tr>))}</tbody></table>
+        <table><tbody>{cands.filter(c => c.job_id === j.id)
+          .sort((a, b) => (b.latest_total ?? -1) - (a.latest_total ?? -1)).map((c, i) => (
+          <tr key={c.id}><td>{i + 1}</td><td><Link to={`/candidates/${c.id}`}>{c.name}</Link></td>
+            <td>{c.latest_total == null ? "not scored" : `${c.latest_total}/100`}</td><td>{c.stage}</td></tr>))}</tbody></table>
       </div>))}
     {isRec && <div className="card"><h3>New job + rubric</h3>
       <div className="row"><input placeholder="Job title" value={title} onChange={e => setTitle(e.target.value)} /></div>
