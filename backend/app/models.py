@@ -51,6 +51,7 @@ class Candidate(Base):
     name: Mapped[str] = mapped_column(String(255))
     resume_text: Mapped[str] = mapped_column(Text)
     filename: Mapped[str] = mapped_column(String(255), default="")
+    stage: Mapped[str] = mapped_column(String(20), default="new", server_default="new")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
     runs: Mapped[list["Run"]] = relationship(
         back_populates="candidate", cascade="all, delete-orphan", order_by="Run.id.desc()"

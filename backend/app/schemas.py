@@ -81,6 +81,7 @@ class CandidateOut(ORM):
     job_id: int
     name: str
     filename: str
+    stage: str = "new"
     created_at: datetime
     latest_total: float | None = None
 
@@ -98,3 +99,11 @@ class ScheduleIn(BaseModel):
 
 class ScorecardIn(BaseModel):
     transcript: str = Field(min_length=20)
+
+
+STAGES = ("new", "screened", "interviewing", "offer", "rejected")
+
+
+class CandidatePatch(BaseModel):
+    name: str | None = Field(None, min_length=1, max_length=255)
+    stage: str | None = Field(None, pattern="^(new|screened|interviewing|offer|rejected)$")

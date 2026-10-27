@@ -89,3 +89,29 @@ def test_upload_size_cap_and_cors():
     assert r.status_code == 413
     pre = client.options("/api/jobs", headers={"Origin": "http://evil.example", "Access-Control-Request-Method": "GET"})
     assert "access-control-allow-origin" not in pre.headers
+
+
+def test_stage_patch_delete_and_csv_export():
+    rec, iv1 = login("recruiter@demo.com"), login("interviewer@demo.com")
+    job = client.get("/api/jobs", headers=rec).json()[0]
+    evil = b"=HYPERLINK(\"http://x\")\nB.S. Computer Science\nBuilt REST APIs in Python on Postgres, shipped to production."
+    cand = client.post("/api/candidates", headers=rec, data={"job_id": job["id"]}, files={"file": ("e.txt", evil)}).json()
+    assert cand["stage"] == "new"
+    client.post(f"/api/candidates/{cand['id']}/score", headers=rec)
+
+    assert client.patch(f"/api/candidates/{cand['id']}", headers=iv1, json={"stage": "offer"}).status_code == 403
+    assert client.patch(f"/api/candidates/{cand['id']}", headers=rec, json={"stage": "bogus"}).status_code == 422
+    r = client.patch(f"/api/candidates/{cand['id']}", headers=rec, json={"stage": "screened"})
+    assert r.status_code == 200 and r.json()["stage"] == "screened"
+
+    assert client.get(f"/api/jobs/{job['id']}/export.csv", headers=iv1).status_code == 403
+    csv_text = client.get(f"/api/jobs/{job['id']}/export.csv", headers=rec).text
+    lines = csv_text.strip().splitlines()
+    assert lines[0].startswith("rank,name,stage,total")
+    assert "'=HYPERLINK" in csv_text and ",=HYPERLINK" not in csv_text  # formula injection neutralised
+    totals = [float(l.split(",")[3]) for l in lines[1:] if l.split(",")[3]]
+    assert totals == sorted(totals, reverse=True)
+
+    assert client.delete(f"/api/candidates/{cand['id']}", headers=iv1).status_code == 403
+    assert client.delete(f"/api/candidates/{cand['id']}", headers=rec).status_code == 204
+    assert client.get(f"/api/candidates/{cand['id']}", headers=rec).status_code == 404

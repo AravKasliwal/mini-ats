@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from ..auth import current_user, recruiter_only
 from ..db import get_db
 from ..models import Candidate, Interview, Job, Run, User
-from ..schemas import CandidateDetail, CandidateOut, RunOut
+from ..schemas import CandidateDetail, CandidateOut, CandidatePatch, RunOut
 from ..services.parse_resume import extract_text, guess_name
 from ..services.rubric_score import score_resume
 
@@ -25,7 +25,7 @@ def visible_candidate(db: Session, user: User, candidate_id: int) -> Candidate:
 
 def _out(c: Candidate) -> dict:
     return {"id": c.id, "job_id": c.job_id, "name": c.name, "filename": c.filename,
-            "created_at": c.created_at, "latest_total": c.runs[0].total if c.runs else None}
+            "stage": c.stage, "created_at": c.created_at, "latest_total": c.runs[0].total if c.runs else None}
 
 
 @router.get("", response_model=list[CandidateOut])
@@ -82,3 +82,23 @@ def score(candidate_id: int, mode: str | None = None, db: Session = Depends(get_
     db.add(run)
     db.commit()
     return run
+
+
+@router.patch("/{candidate_id}", response_model=CandidateOut, dependencies=[Depends(recruiter_only)])
+def update(candidate_id: int, body: CandidatePatch, db: Session = Depends(get_db)):
+    c = db.get(Candidate, candidate_id)
+    if not c:
+        raise HTTPException(404, "Candidate not found")
+    for field, value in body.model_dump(exclude_none=True).items():
+        setattr(c, field, value)
+    db.commit()
+    return _out(c)
+
+
+@router.delete("/{candidate_id}", status_code=204, dependencies=[Depends(recruiter_only)])
+def delete(candidate_id: int, db: Session = Depends(get_db)):
+    c = db.get(Candidate, candidate_id)
+    if not c:
+        raise HTTPException(404, "Candidate not found")
+    db.delete(c)
+    db.commit()
